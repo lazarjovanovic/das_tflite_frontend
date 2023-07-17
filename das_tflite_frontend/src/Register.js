@@ -5,6 +5,8 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import axios from 'axios';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import logo from './logo.svg';
 import './styles/App.css';
@@ -23,25 +25,44 @@ function Register() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [gender, setGender] = useState("Male")
+  const [role, setRole] = useState("Patient")
+  const [startDate, setStartDate] = useState(new Date());
 
   const errors = {
     invalid_registration: "Invalid registration"
   };
+
+  const onOptionChangeGender = e => {
+    setGender(e.target.value)
+  }
+
+  const onOptionChangeRole = e => {
+    setRole(e.target.value)
+  }
 
   const handleSubmit = async (event) => {
     //Prevent page reload
     event.preventDefault();
     setIsLoading(true);
 
-    var { rname, rsurname, rusername, rpassword } = document.forms[0];
+    var { rname, rsurname, rusername, rpassword} = document.forms[0];
 
     const encoded_pwd = btoa(rpassword.value)
+
+    const formattedDate = startDate.toLocaleDateString('en-GB', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).split('/').reverse().join('-');
 
     const requestOptions = {
         name: rname.value,
         surname: rsurname.value,
         username: rusername.value,
-        password: encoded_pwd
+        password: encoded_pwd,
+        gender: gender,
+        dob: startDate,
+        role: role
     };
 
     const response = await axios.post('http://localhost:10000/register', requestOptions);
@@ -73,31 +94,61 @@ function Register() {
       <form onSubmit={handleSubmit}>
         <div className="input-container">
           <label>Name </label>
-          <input type="text" name="name" required />
+          <input type="text" name="rname" required />
         </div>
         <div className="input-container">
           <label>Surname </label>
-          <input type="text" name="surname" required />
+          <input type="text" name="rsurname" required />
         </div>
         <div className="input-container">
-          <label>Surname </label>
-          <input type="text" name="username" required />
+          <label>Username </label>
+          <input type="text" name="rusername" required />
         </div>
         <div className="input-container">
           <label>Password </label>
-          <input type="password" name="pass" required />
+          <input type="password" name="rpassword" required />
           {renderErrorMessage("invalid_register_label")}
         </div>
 
         <div class="radio-buttons">
             <input 
                 type="radio" 
-                name="optradio"/><label>Male</label>
+                name="gender"
+                value="Male"
+                checked={gender === "Male"}
+                onChange={onOptionChangeGender}
+                defaultChecked/><label>Male</label>
         
             <input 
                 type="radio" 
-                name="optradio"/><label>Female</label>
+                name="gender"
+                value="Female"
+                checked={gender === "Female"}
+                onChange={onOptionChangeGender}/><label>Female</label>
         </div>
+        <div className="input-container">
+        <label>Date of Birth</label>
+        </div>
+        <div className="input-container">
+            <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+        </div>
+        <div class="radio-buttons">
+            <input 
+                type="radio" 
+                name="optradiorole"
+                value="Patient"
+                checked={role === "Patient"}
+                onChange={onOptionChangeRole}
+                defaultChecked/><label>Patient</label>
+        
+            <input 
+                type="radio" 
+                name="optradiorole"
+                value="Doctor"
+                checked={role === "Doctor"}
+                onChange={onOptionChangeRole}/><label>Doctor</label>
+        </div>
+        <div></div>
         <div className="button-container">
           <input type="submit" disabled={isLoading}/>
         </div>

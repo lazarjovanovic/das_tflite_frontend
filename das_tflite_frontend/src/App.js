@@ -40,8 +40,7 @@ function App() {
 
     const requestOptions = {
       username: uname.value, 
-      //password: encoded_pwd
-      password: pass.value
+      password: encoded_pwd
     };
 
     const response = await axios.post('http://localhost:10000/login', requestOptions);
