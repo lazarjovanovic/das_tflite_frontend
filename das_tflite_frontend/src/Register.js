@@ -7,18 +7,12 @@ import ReactDOM from "react-dom";
 import axios from 'axios';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Form from 'react-bootstrap/Form';
+import Button from "react-bootstrap/Button";
+import { Circles  } from 'react-loader-spinner'
 
 import logo from './logo.svg';
 import './styles/App.css';
-
-function LoadingSpinner() {
-  return (
-    <div className="spinner-container">
-      <div className="loading-spinner">
-      </div>
-    </div>
-  );
-}
 
 function Register() {
   const [errorMessages, setErrorMessages] = useState({});
@@ -91,40 +85,46 @@ function Register() {
   // JSX code for login form
   const renderForm = (
     <div className="form">
+      <div className="title">Register</div>
+      <hr/>
       <form onSubmit={handleSubmit}>
         <div className="input-container">
           <label>Name </label>
-          <input type="text" name="rname" required />
+          <Form.Control type="text" name="rname" required />
         </div>
         <div className="input-container">
           <label>Surname </label>
-          <input type="text" name="rsurname" required />
+          <Form.Control type="text" name="rsurname" required />
         </div>
         <div className="input-container">
           <label>Username </label>
-          <input type="text" name="rusername" required />
+          <Form.Control type="text" name="rusername" required />
         </div>
         <div className="input-container">
           <label>Password </label>
-          <input type="password" name="rpassword" required />
+          <Form.Control type="password" name="rpassword" required />
           {renderErrorMessage("invalid_register_label")}
         </div>
-
-        <div class="radio-buttons">
-            <input 
-                type="radio" 
-                name="gender"
-                value="Male"
-                checked={gender === "Male"}
-                onChange={onOptionChangeGender}
-                defaultChecked/><label>Male</label>
-        
-            <input 
-                type="radio" 
-                name="gender"
-                value="Female"
-                checked={gender === "Female"}
-                onChange={onOptionChangeGender}/><label>Female</label>
+        <div className="input-container" style={{flexDirection:"row"}}>
+          <Form.Check
+            inline
+            type="switch"
+            id="custom-switch"
+            value="Male"
+            label="Male"
+            defaultChecked
+            checked={gender === "Male"}
+            onChange={onOptionChangeGender}
+          />
+          <Form.Check
+            inline
+            type="switch"
+            value="Female"
+            label="Female"
+            id="disabled-custom-switch"
+            checked={gender === "Female"}
+            onChange={onOptionChangeGender}
+          />
         </div>
         <div className="input-container">
         <label>Date of Birth</label>
@@ -132,25 +132,30 @@ function Register() {
         <div className="input-container">
             <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
         </div>
-        <div class="radio-buttons">
-            <input 
-                type="radio" 
-                name="optradiorole"
-                value="Patient"
-                checked={role === "Patient"}
-                onChange={onOptionChangeRole}
-                defaultChecked/><label>Patient</label>
-        
-            <input 
-                type="radio" 
-                name="optradiorole"
-                value="Doctor"
-                checked={role === "Doctor"}
-                onChange={onOptionChangeRole}/><label>Doctor</label>
+        <div className="input-container" style={{flexDirection:"row"}}>
+          <Form.Check
+            inline
+            type="radio" 
+            name="optradiorole"
+            value="Patient"
+            label="Patient"
+            checked={role === "Patient"}
+            onChange={onOptionChangeRole}
+            defaultChecked
+          />    
+          <Form.Check
+            inline
+            type="radio" 
+            name="optradiorole"
+            label="Doctor"
+            value="Doctor"
+            checked={role === "Doctor"}
+            onChange={onOptionChangeRole}
+          />
         </div>
         <div></div>
         <div className="button-container">
-          <input type="submit" disabled={isLoading}/>
+          <Button type="submit"variant="success" disabled={isLoading}>Register</Button>
         </div>
       </form>
     </div>
@@ -158,8 +163,7 @@ function Register() {
 
   return (
     <div className="register">
-        <div className="title">Log In</div>
-        {isLoading ? <LoadingSpinner /> : (isSubmitted ? <div>User is successfully registered</div> : renderForm)}
+        {isLoading ? <Circles /> : (isSubmitted ? <div>User is successfully registered</div> : renderForm)}
     </div>
   );
 }

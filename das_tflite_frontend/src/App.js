@@ -7,92 +7,68 @@ import ReactDOM from "react-dom";
 import { Navigate } from "react-router-dom";
 import axios from 'axios';
 import Register from "./Register";
+import Login from "./Login";
+import Button from "react-bootstrap/Button";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import logo from './logo.svg';
-import './styles/App.css';
-
-function LoadingSpinner() {
-  return (
-    <div className="spinner-container">
-      <div className="loading-spinner">
-      </div>
-    </div>
-  );
-}
+//import './styles/App.css';
 
 function App() {
-  const [errorMessages, setErrorMessages] = useState({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+  const [isRegister, setIsRegister] = useState(false);
 
-  const errors = {
-    invalid_login: "Invalid login"
+  function handleOnCLickLogIn()
+  {
+    setIsLogin(true);
+    setIsRegister(false);
   };
 
-  const handleSubmit = async (event) => {
-    //Prevent page reload
-    event.preventDefault();
-    setIsLoading(true);
-
-    var { uname, pass } = document.forms[0];
-
-    const encoded_pwd = btoa(pass.value)
-
-    const requestOptions = {
-      username: uname.value, 
-      password: encoded_pwd
-    };
-
-    const response = await axios.post('http://localhost:10000/login', requestOptions);
-    const userData = response.data
-    setIsLoading(false);
-
-    if (userData) {
-      if (userData.user_id === null) {
-        setErrorMessages({ name: "invalid_login_label", message: errors.invalid_login });
-      } else {
-        const user_role = userData.user_role
-        setIsSubmitted(true);
-        // TODO redirect to another page
-        //navigate('/Register');
-      }
-    } else {
-      setErrorMessages({ name: "invalid_login_label", message: errors.invalid_login });
-    }
+  function handleOnCLickRegister()
+  {
+    setIsLogin(false);
+    setIsRegister(true);
   };
-
-  // Generate JSX code for error message
-  const renderErrorMessage = (name) =>
-    name === errorMessages.name && (
-      <div className="error">{errorMessages.message}</div>
-    );
 
   // JSX code for login form
   const renderForm = (
     <div className="form">
-      <div className="title">Sign In</div>
-      <form onSubmit={handleSubmit}>
-        <div className="input-container">
-          <label>Username </label>
-          <input type="text" name="uname" required />
-        </div>
-        <div className="input-container">
-          <label>Password </label>
-          <input type="password" name="pass" required />
-          {renderErrorMessage("invalid_login_label")}
+      <div className="title">Derma App</div>
+      <hr/>
+      <form>
+        <div className="button-container">
+        <Button variant="primary" style={{margin:5, width:"80px"}} onClick={handleOnCLickLogIn}>Log in</Button>
         </div>
         <div className="button-container">
-          <input type="submit" disabled={isLoading}/>
+        <Button variant="success" style={{margin:5}} onClick={handleOnCLickRegister}>Register</Button>
         </div>
       </form>
     </div>
   );
 
+  const renderLoginRegisterForm = (
+    <div className="form">
+    <div className="title">Derma App</div>
+    <form>
+      <button
+        type="button"
+        className="btn primary"
+        onClick={handleOnCLickLogIn}
+      >Sign In</button>
+      <button
+        type="button"
+        className="btn primary"
+        onClick={handleOnCLickRegister}
+      >Register</button>
+    </form>
+  </div>
+  )
+
   return (
     <div className="app">
       <div className="login-form">
-        {isLoading ? <LoadingSpinner /> : (isSubmitted ? <Register/> : renderForm)}
-
+      {isLogin ? <Login/> :
+      isRegister ? <Register/> : renderForm}
       </div>
     </div>
   );
