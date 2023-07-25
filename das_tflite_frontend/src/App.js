@@ -32,44 +32,43 @@ function App() {
 
   // JSX code for login form
   const renderForm = (
-    <div className="form">
-      <div className="title">Derma App</div>
-      <hr/>
-      <form>
-        <div className="button-container">
-        <Button variant="primary" style={{margin:5, width:"80px"}} onClick={handleOnCLickLogIn}>Log in</Button>
-        </div>
-        <div className="button-container">
-        <Button variant="success" style={{margin:5}} onClick={handleOnCLickRegister}>Register</Button>
-        </div>
-      </form>
+    <div className="login-form">
+      <div className="form">
+        <div className="title">Derma App</div>
+        <hr/>
+        <form>
+          <div className="button-container">
+          <Button variant="primary" style={{margin:5, width:"80px"}} onClick={handleOnCLickLogIn}>Log in</Button>
+          </div>
+          <div className="button-container">
+          <Button variant="success" style={{margin:5}} onClick={handleOnCLickRegister}>Register</Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 
   const renderLoginRegisterForm = (
     <div className="form">
-    <div className="title">Derma App</div>
-    <form>
-      <button
-        type="button"
-        className="btn primary"
-        onClick={handleOnCLickLogIn}
-      >Sign In</button>
-      <button
-        type="button"
-        className="btn primary"
-        onClick={handleOnCLickRegister}
-      >Register</button>
-    </form>
-  </div>
+      <div className="title">Derma App</div>
+      <form>
+        <button
+          type="button"
+          className="btn primary"
+          onClick={handleOnCLickLogIn}
+        >Sign In</button>
+        <button
+          type="button"
+          className="btn primary"
+          onClick={handleOnCLickRegister}
+        >Register</button>
+      </form>
+    </div>
   )
 
   return (
     <div className="app">
-      <div className="login-form">
-      {isLogin ? <Login/> :
-      isRegister ? <Register/> : renderForm}
-      </div>
+      {isLogin ? <Login/> : isRegister ? <Register/> : renderForm}
     </div>
   );
 }

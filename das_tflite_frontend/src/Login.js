@@ -4,7 +4,7 @@
 
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Register from "./Register";
 import Button from "react-bootstrap/Button";
@@ -14,11 +14,17 @@ import { ThreeDots  } from 'react-loader-spinner'
 
 import logo from './logo.svg';
 import './styles/App.css';
+import App from "./App";
+import DoctorMenu from "./DoctorMenu";
+import PatientMenu from "./PatientMenu";
 
 function Login() {
   const [errorMessages, setErrorMessages] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isBack, setIsBack] = useState(false);
+  const [isDoctor, setIsDoctor] = useState(false);
+  const [user_id, setUserId] = useState("");
 
   const errors = {
     invalid_login: "Invalid login"
@@ -47,9 +53,13 @@ function Login() {
         setErrorMessages({ name: "invalid_login_label", message: errors.invalid_login });
       } else {
         const user_role = userData.user_role
+        const tmp_user_id = userData.user_id
+        setUserId(tmp_user_id)
         setIsSubmitted(true);
-        // TODO redirect to another page
-        //navigate('/Register');
+        if (user_role === 'Doctor')
+        {
+          setIsDoctor(true);
+        }
       }
     } else {
       setErrorMessages({ name: "invalid_login_label", message: errors.invalid_login });
@@ -64,29 +74,34 @@ function Login() {
 
   // JSX code for login form
   const renderForm = (
-    <div className="form">
-      <h2 className="title">Sign In</h2>
-      <hr/>
-      <form onSubmit={handleSubmit}>
-        <div className="input-container">
-          <label>Username </label>
-          <Form.Control type="text" name="uname" required />
-        </div>
-        <div className="input-container">
-          <label>Password </label>
-          <Form.Control type="password" name="pass" required />
-          {renderErrorMessage("invalid_login_label")}
-        </div>
-        <div className="button-container">
-            <Button type="submit"variant="success" disabled={isLoading}>Sign In</Button>
-        </div>
-      </form>
+    <div className="login-form">
+      <div className="form">
+        <h2 className="title">Sign In</h2>
+        <hr/>
+        <form onSubmit={handleSubmit}>
+          <div className="input-container">
+            <label>Username </label>
+            <Form.Control type="text" name="uname" required />
+          </div>
+          <div className="input-container">
+            <label>Password </label>
+            <Form.Control type="password" name="pass" required />
+            {renderErrorMessage("invalid_login_label")}
+          </div>
+          <div className="button-container">
+              <Button type="submit"variant="success" disabled={isLoading}>Sign In</Button>
+          </div>
+          <div className="button-container">
+              <Button type="button" style={{margin:5}} variant="primary" onClick={() => setIsBack(true)}>Back</Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 
   return (
       <div>
-        {isLoading ? <ThreeDots/> : (isSubmitted ? <Register/> : renderForm)}
+        {isLoading ? <ThreeDots/> : (isSubmitted ? (isDoctor ? <DoctorMenu user_id={user_id}/> : <PatientMenu/>) : (isBack ? <App/> : renderForm))}
       </div>
   );
 }
