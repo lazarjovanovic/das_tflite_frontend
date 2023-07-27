@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import DoctorMenu from "./DoctorMenu";
 import Form from 'react-bootstrap/Form';
+import axios from 'axios';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 function AddNewTherapy(user){
+    const [errorMessages, setErrorMessages] = useState({});
+    const [isProcessing, setIsProcessing] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isBack, setIsBack] = useState(false);
     const [disease, setDisease] = useState("Psoriasis");
@@ -13,6 +17,26 @@ function AddNewTherapy(user){
     const [instancesNumber, setInstancesNumber] = useState("0-5");
     const [gender, setGender] = useState("Male");
     const doctor_id = user.user_id;
+
+    const createNotification = (type) => {
+      if (type === 'success')
+      {
+        NotificationManager.success('Success message', 'New therapy successfully added', 3000);
+      }
+      else
+      {
+        NotificationManager.error('Error message', 'New therapy not added properly', 3000);
+      }
+    };
+
+    const errors = {
+      unable_to_add_therapy: "Unable to add therapy"
+    };
+
+    const renderErrorMessage = (name) =>
+    name === errorMessages.name && (
+      <div className="error">{errorMessages.message}</div>
+    );
 
     const onOptionChangeDisease = e => {
         setDisease(e.target.value)
@@ -41,27 +65,48 @@ function AddNewTherapy(user){
     const handleSubmit = async (event) => {
         event.preventDefault();
         setIsLoading(true);
+        setIsProcessing(true);
     
+        var {label_width, label_height, label_description} = document.forms[0];
 
-    var {width, height} = document.forms[0];
+        const requestOptions = {
+            disease: disease,
+            location: location,
+            length_of_existence_weeks_from: loe.includes('-') ? parseInt(loe.split('-')[0]) : parseInt(loe.split('+')[0]),
+            length_of_existence_weeks_to: loe.includes('-') ? parseInt(loe.split('-')[1]) : 200,
+            dimension_width_mm: parseInt(label_width.value),
+            dimension_height_mm: parseInt(label_height.value),
+            patient_age_from: age.includes('-') ? parseInt(age.split('-')[0]) : parseInt(age.split('+')[0]),
+            patient_age_to: age.includes('-') ? parseInt(age.split('-')[1]) : 200,
+            gender: gender,
+            number_of_instances_from: instancesNumber.includes('-') ? parseInt(instancesNumber.split('-')[0]) : parseInt(instancesNumber.split('+')[0]),
+            number_of_instances_to: instancesNumber.includes('-') ? parseInt(instancesNumber.split('-')[1]) : 200,
+            description: label_description.value,
+            doctor_id: doctor_id
+        };
 
-    const requestOptions = {
-        disease: disease,
-        location: location,
-        length_of_existence_weeks_from: parseInt(loe.split('-')[0]),
-        length_of_existence_weeks_to: parseInt(loe.split('-')[1]),
-        dimension_width_mm: parseInt(width.value),
-        dimension_height_mm: parseInt(height.value),
-        patient_age_from: parseInt(age.split('-')[0]),
-        patient_age_to: parseInt(age.split('-')[1]),
-        gender: gender,
-        number_of_instances_from: parseInt(instancesNumber.split('-')[0]),
-        number_of_instances_to: parseInt(instancesNumber.split('-')[1]),
-        doctor_id: doctor_id
-    };
+        const axiosConfig = {
+          headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Authorization": doctor_id,
+          }
+        };
+        const response = await axios.post('http://localhost:10000/add_therapy', requestOptions, axiosConfig);
+        const userData = response.data
+        setIsLoading(false);
 
-    // TODO: IMPLEMENT POST REQUEST AND RETURN TO DOCTOR MENU
-    const x = 5;
+        if (userData) {
+          if (userData.status_flag === true) {
+            createNotification("success");
+            //present div and return
+          } else {
+            createNotification("error");
+            setErrorMessages({ name: "unable_to_add_therapy_label", message: errors.unable_to_add_therapy });
+          }
+        } else {
+          createNotification("error");
+          setErrorMessages({ name: "unable_to_add_therapy_label", message: errors.unable_to_add_therapy });
+        }
     };
 
     const renderForm = (
@@ -79,7 +124,7 @@ function AddNewTherapy(user){
               </div>
               <div className="input-container" style={{flexDirection:"row"}}>
                   <label style={{margin:"auto"}}>Location </label>
-                  <Form.Select aria-label="Default select example">
+                  <Form.Select aria-label="Default select example" onChange={onOptionChangeLocation}>
                     <option value="Head">Head</option>
                     <option value="Neck">Neck</option>
                     <option value="Arms">Arms</option>
@@ -94,7 +139,7 @@ function AddNewTherapy(user){
               </div>
               <div className="input-container" style={{flexDirection:"row"}}>
                   <label style={{margin:"auto"}}>Length of existence in weeks </label>
-                  <Form.Select aria-label="Default select example">
+                  <Form.Select aria-label="Default select example" onChange={onOptionChangeLOE}>
                     <option value="0-2">0-2</option>
                     <option value="2-4">2-4</option>
                     <option value="4-8">4-8</option>
@@ -103,15 +148,15 @@ function AddNewTherapy(user){
               </div>
               <div className="input-container" style={{flexDirection:"row"}}>
                 <label>Width (mm) </label>
-                <Form.Control type="number" pattern="[0-9]*" name="width" required />
+                <Form.Control type="number" pattern="[0-9]*" name="label_width" required />
               </div>
               <div className="input-container" style={{flexDirection:"row"}}>
                 <label>Height (mm) </label>
-                <Form.Control type="number" pattern="[0-9]*" name="height" required />
+                <Form.Control type="number" pattern="[0-9]*" name="label_height" required />
               </div>
               <div className="input-container" style={{flexDirection:"row"}}>
                   <label style={{margin:"auto"}}>Patient age </label>
-                  <Form.Select aria-label="Default select example">
+                  <Form.Select aria-label="Default select example" onChange={onOptionChangeAge}>
                     <option value="0-20">0-20</option>
                     <option value="20-40">20-40</option>
                     <option value="40-60">40-60</option>
@@ -121,7 +166,7 @@ function AddNewTherapy(user){
               </div>
               <div className="input-container" style={{flexDirection:"row"}}>
                   <label style={{margin:"auto"}}>Number of instances </label>
-                  <Form.Select aria-label="Default select example">
+                  <Form.Select aria-label="Default select example" onChange={onOptionChangeInstancesNo}>
                     <option value="0-5">0-5</option>
                     <option value="5-10">5-10</option>
                     <option value="10-20">10-20</option>
@@ -137,7 +182,6 @@ function AddNewTherapy(user){
                 label="Male"
                 checked={gender === "Male"}
                 onChange={onOptionChangeGender}
-                defaultChecked
                 />    
                 <Form.Check
                 inline
@@ -149,14 +193,23 @@ function AddNewTherapy(user){
                 onChange={onOptionChangeGender}
                 />
               </div>
+              
+              <div className="input-container" style={{flexDirection:"row"}}>
+                <label style={{margin:"auto"}}>Description </label>
+                <Form.Control type="textarea" name="label_description" required />
+                {/* <textarea name="body" onChange={this.handleChange} value={value}/> */}
+              </div>
+
               <div className="button-container">
-                  <Button type="submit" style={{margin:5}} variant="success" disabled={isLoading}>Add new therapy</Button>
+                  <Button type="submit" style={{margin:5}} variant="success" disabled={isProcessing}>Add new therapy</Button>
+                  {renderErrorMessage("invalid_login_label")}
               </div>
               <div className="button-container">
                   <Button type="button" style={{margin:5}} variant="primary" onClick={() => setIsBack(true)}>Back</Button>
               </div>
             </form>
           </div>
+          <NotificationContainer/>
         </div>
       );
 
