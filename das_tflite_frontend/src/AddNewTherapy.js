@@ -4,6 +4,8 @@ import DoctorMenu from "./DoctorMenu";
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+import Textarea from '@mui/joy/Textarea';
 
 function AddNewTherapy(user){
     const [errorMessages, setErrorMessages] = useState({});
@@ -19,13 +21,13 @@ function AddNewTherapy(user){
     const doctor_id = user.user_id;
 
     const createNotification = (type) => {
-      if (type === 'success')
+      if (type ==='success')
       {
-        NotificationManager.success('Success message', 'New therapy successfully added', 3000);
+        NotificationManager.success('Successful addition', 'New therapy added successfully');
       }
       else
       {
-        NotificationManager.error('Error message', 'New therapy not added properly', 3000);
+        NotificationManager.error('Failed addition', 'New therapy addition failed');
       }
     };
 
@@ -91,10 +93,9 @@ function AddNewTherapy(user){
               "Authorization": doctor_id,
           }
         };
-        const response = await axios.post('http://localhost:10000/add_therapy', requestOptions, axiosConfig);
-        const userData = response.data
-        setIsLoading(false);
-
+       const response = await axios.post('http://localhost:10000/add_therapy', requestOptions, axiosConfig);
+       const userData = response.data
+       setIsLoading(false);
         if (userData) {
           if (userData.status_flag === true) {
             createNotification("success");
@@ -195,9 +196,8 @@ function AddNewTherapy(user){
               </div>
               
               <div className="input-container" style={{flexDirection:"row"}}>
-                <label style={{margin:"auto"}}>Description </label>
-                <Form.Control type="textarea" name="label_description" required />
-                {/* <textarea name="body" onChange={this.handleChange} value={value}/> */}
+                <label style={{marginTop:"30px"}}>Description </label>
+                <Textarea minRows={3} maxRows={3} style={{width:"260px"}} color="neutral" size="lg" name="label_description" required />
               </div>
 
               <div className="button-container">
@@ -208,8 +208,8 @@ function AddNewTherapy(user){
                   <Button type="button" style={{margin:5}} variant="primary" onClick={() => setIsBack(true)}>Back</Button>
               </div>
             </form>
+            <NotificationContainer/>
           </div>
-          <NotificationContainer/>
         </div>
       );
 
