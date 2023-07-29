@@ -3,12 +3,14 @@ import Button from "react-bootstrap/Button";
 import AddNewTherapy from "./AddNewTherapy";
 import ViewAllTherapies from "./ViewAllTherapies";
 import App from "./App";
+import axios from 'axios';
 
 function DoctorMenu(user){
     const [isAddNew, setIsAddNew] = useState(false);
     const [isViewAll, setIsViewAll] = useState(false);
     const [isBack, setIsBack] = useState(false);
-    const [doctorId, setDoctorId] = useState(user.user_id);
+    const [isLoading, setIsLoading] = useState(false);
+    const user_id = user.user_id;
 
     const renderForm = (
         <div className="login-form">
@@ -33,7 +35,7 @@ function DoctorMenu(user){
 
     return (
         <div>
-          {isAddNew ? <AddNewTherapy user_id={doctorId}/> : (isViewAll ? <ViewAllTherapies/> : (isBack ? <App/>: renderForm))}
+          {isAddNew ? <AddNewTherapy user_id={user_id}/> : (isViewAll ? <ViewAllTherapies user_id={user_id}/> : (isBack ? <App/>: renderForm))}
         </div>
     );
 }

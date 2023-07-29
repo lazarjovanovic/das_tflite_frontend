@@ -18,16 +18,16 @@ function AddNewTherapy(user){
     const [age, setAge] = useState("0-20");
     const [instancesNumber, setInstancesNumber] = useState("0-5");
     const [gender, setGender] = useState("Male");
-    const doctor_id = user.user_id;
+    const user_id = user.user_id;
 
     const createNotification = (type) => {
       if (type ==='success')
       {
-        NotificationManager.success('Successful addition', 'New therapy added successfully');
+        NotificationManager.success('Successful addition', 'New therapy added successfully', 3000);
       }
       else
       {
-        NotificationManager.error('Failed addition', 'New therapy addition failed');
+        NotificationManager.error('Failed addition', 'New therapy addition failed', 3000);
       }
     };
 
@@ -84,30 +84,30 @@ function AddNewTherapy(user){
             number_of_instances_from: instancesNumber.includes('-') ? parseInt(instancesNumber.split('-')[0]) : parseInt(instancesNumber.split('+')[0]),
             number_of_instances_to: instancesNumber.includes('-') ? parseInt(instancesNumber.split('-')[1]) : 200,
             description: label_description.value,
-            doctor_id: doctor_id
+            doctor_id: user_id
         };
 
         const axiosConfig = {
           headers: {
               'Content-Type': 'application/json;charset=UTF-8',
-              "Authorization": doctor_id,
+              "Authorization": user_id,
           }
         };
-       const response = await axios.post('http://localhost:10000/add_therapy', requestOptions, axiosConfig);
-       const userData = response.data
-       setIsLoading(false);
-        if (userData) {
-          if (userData.status_flag === true) {
-            createNotification("success");
-            //present div and return
+        const response = await axios.post('http://localhost:10000/add_therapy', requestOptions, axiosConfig);
+        const userData = response.data
+        setIsLoading(false);
+          if (userData) {
+            if (userData.status_flag === true) {
+              createNotification("success");
+              //present div and return
+            } else {
+              createNotification("error");
+              setErrorMessages({ name: "unable_to_add_therapy_label", message: errors.unable_to_add_therapy });
+            }
           } else {
             createNotification("error");
             setErrorMessages({ name: "unable_to_add_therapy_label", message: errors.unable_to_add_therapy });
           }
-        } else {
-          createNotification("error");
-          setErrorMessages({ name: "unable_to_add_therapy_label", message: errors.unable_to_add_therapy });
-        }
     };
 
     const renderForm = (
@@ -216,7 +216,7 @@ function AddNewTherapy(user){
 
     return (
         <div>
-          {isBack ? <DoctorMenu/> : renderForm}
+          {isBack ? <DoctorMenu user_id={user_id}/> : renderForm}
         </div>
     );
 }
