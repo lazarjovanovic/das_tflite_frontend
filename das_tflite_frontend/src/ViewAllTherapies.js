@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import DoctorMenu from "./DoctorMenu";
+import UpdateTherapy from "./UpdateTherapy";
 import axios from 'axios';
 import Button from "react-bootstrap/Button";
 import { ThreeDots  } from 'react-loader-spinner'
@@ -15,6 +16,8 @@ function ViewAllTherapies(user){
     const [isLoading, setIsLoading] = useState(true);
     const [isReload, setIsReload] = useState(false);
     const [data, setUserTherapies] = useState([]);
+    const [updateData, setUpdateData] = useState({});
+    const [isUpdate, setIsUpdate] = useState(false);
     const user_id = user.user_id;
 
     const columns = [
@@ -39,16 +42,11 @@ function ViewAllTherapies(user){
         wrap: true
       },
       {
-        name: 'Length of existence in weeks from',
-        selector: 'length_of_existence_weeks_from',
+        name: 'Length of existence in weeks',
+        selector: 'length_of_existence_weeks',
         sortable: true,
         width: "7%",
         wrap: true
-      },
-      {
-        name: 'Length of existence in weeks to',
-        selector: 'length_of_existence_weeks_to',
-        sortable: true,
       },
       {
         name: 'Width dimension in mm',
@@ -61,13 +59,8 @@ function ViewAllTherapies(user){
         sortable: true,
       },
       {
-        name: 'Patient age from',
-        selector: 'patient_age_from',
-        sortable: true,
-      },
-      {
-        name: 'Patient age to',
-        selector: 'patient_age_to',
+        name: 'Patient age',
+        selector: 'patient_age',
         sortable: true,
       },
       {
@@ -76,13 +69,8 @@ function ViewAllTherapies(user){
         sortable: true,
       },
       {
-        name: 'Number of instances from',
-        selector: 'number_of_instances_from',
-        sortable: true,
-      },
-      {
-        name: 'Number of instances to',
-        selector: 'number_of_instances_from',
+        name: 'Number of instances',
+        selector: 'number_of_instances',
         sortable: true,
       },
       {
@@ -92,7 +80,7 @@ function ViewAllTherapies(user){
         button: true,
       },
       {
-        cell:(row) => <Icon name="edit" tooltip="Edit" theme="light" size="medium" onClick={() => handleClickUpdate} />,
+        cell:(row) => <Icon name="edit" tooltip="Edit" theme="light" size="medium" onClick={() => handleClickUpdate(row)} />,
         ignoreRowClick: true,
         allowOverflow: true,
         button: true,
@@ -119,7 +107,7 @@ function ViewAllTherapies(user){
 
     useEffect(() => {
       fetchData();
-   }, []);
+    }, []);
 
     const handleClickDelete = async (id) => {
       setIsLoading(true);
@@ -139,9 +127,11 @@ function ViewAllTherapies(user){
       setIsLoading(false);
       setIsReload(true);
     };
-    const handleClickUpdate = (id) => {
-      console.log(`You clicked me! ${id}`);
-      const x = 5;
+    const handleClickUpdate = (row) => {
+      console.log(`Updating therapy with id ${row.id}`);
+      
+      setUpdateData(row);
+      setIsUpdate(true);
     };
 
     const tableData = {
@@ -174,7 +164,7 @@ function ViewAllTherapies(user){
 
     return (
       <div className="container" style={{maxWidth:"1520px"}}>
-          {isBack ? <DoctorMenu user_id={user_id}/> : (isReload ? <ViewAllTherapies user_id={user_id}/> : (isLoading ? ThreeDots : renderForm))}
+          {isBack ? <DoctorMenu user_id={user_id}/> : (isReload ? <ViewAllTherapies user_id={user_id}/> : (isUpdate ? <UpdateTherapy user_id={user_id} update_data={updateData}/>: (isLoading ? ThreeDots : renderForm)))}
       </div>
     );
 }
