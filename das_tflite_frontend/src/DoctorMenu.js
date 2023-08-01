@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
-import AddNewTherapy from "./AddNewTherapy";
 import ViewAllTherapies from "./ViewAllTherapies";
 import App from "./App";
-import axios from 'axios';
+import AddNewTherapy from "./AddNewTherapy";
 
 function DoctorMenu(user){
     const [isAddNew, setIsAddNew] = useState(false);
     const [isViewAll, setIsViewAll] = useState(false);
     const [isBack, setIsBack] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
     const user_id = user.user_id;
 
     const renderForm = (

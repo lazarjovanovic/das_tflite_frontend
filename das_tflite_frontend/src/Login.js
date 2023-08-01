@@ -3,16 +3,10 @@
 //"type": "module", in package.json
 
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
-import { Navigate, useNavigate } from "react-router-dom";
 import axios from 'axios';
-import Register from "./Register";
 import Button from "react-bootstrap/Button";
 import Form from 'react-bootstrap/Form';
-
 import { ThreeDots  } from 'react-loader-spinner'
-
-import logo from './logo.svg';
 import './styles/App.css';
 import App from "./App";
 import DoctorMenu from "./DoctorMenu";
@@ -101,7 +95,7 @@ function Login() {
 
   return (
       <div>
-        {isLoading ? <ThreeDots/> : (isSubmitted ? (isDoctor ? <DoctorMenu user_id={user_id}/> : <PatientMenu/>) : (isBack ? <App/> : renderForm))}
+        {isLoading ? <ThreeDots/> : (isSubmitted ? (isDoctor ? <DoctorMenu user_id={user_id}/> : <PatientMenu user_id={user_id}/>) : (isBack ? <App/> : renderForm))}
       </div>
   );
 }
