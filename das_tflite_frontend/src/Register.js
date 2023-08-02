@@ -10,6 +10,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import Form from 'react-bootstrap/Form';
 import Button from "react-bootstrap/Button";
 import { ThreeDots  } from 'react-loader-spinner'
+import DoctorMenu from "./DoctorMenu";
+import PatientMenu from "./PatientMenu";
 
 import logo from './logo.svg';
 import './styles/App.css';
@@ -23,6 +25,8 @@ function Register() {
   const [role, setRole] = useState("Patient")
   const [startDate, setStartDate] = useState(new Date());
   const [isBack, setIsBack] = useState(false);
+  const [isDoctor, setIsDoctor] = useState(false);
+  const [user_id, setUserId] = useState("");
 
   const errors = {
     invalid_registration: "Invalid registration"
@@ -70,9 +74,13 @@ function Register() {
         setErrorMessages({ name: "invalid_register_label", message: errors.invalid_registration });
       } else {
         const user_role = userData.user_role
-        const user_id = userData.user_id
+        const tmp_user_id = userData.user_id
+        setUserId(tmp_user_id)
         setIsSubmitted(true);
-        // TODO redirect to another page
+        if (user_role === 'Doctor')
+        {
+          setIsDoctor(true);
+        }
       }
     } else {
       setErrorMessages({ name: "invalid_register_label", message: errors.invalid_registration });
@@ -171,7 +179,8 @@ function Register() {
 
   return (
     <div className="register">
-        {isLoading ? <ThreeDots /> : (isSubmitted ? <div>User is successfully registered</div> : (isBack? <App/> : renderForm))}
+        {/* {isLoading ? <ThreeDots /> : (isSubmitted ? <div>User is successfully registered</div> : (isBack? <App/> : renderForm))} */}
+        {isLoading ? <ThreeDots/> : (isSubmitted ? (isDoctor ? <DoctorMenu user_id={user_id}/> : <PatientMenu user_id={user_id}/>) : (isBack ? <App/> : renderForm))}
     </div>
   );
 }

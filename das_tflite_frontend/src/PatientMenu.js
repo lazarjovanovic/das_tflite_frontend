@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
-import AddNewTherapy from "./AddNewTherapy";
-import ViewAllTherapies from "./ViewAllTherapies";
 import App from "./App";
 import AddNewExamination from "./AddNewExamination";
+import ViewAllExaminations from "./ViewAllExaminations";
 
 function PatientMenu(user){
   const [isPerformExamination, setIsPerformExamination] = useState(false);
@@ -33,7 +32,7 @@ function PatientMenu(user){
 
   return (
       <div>
-        {isPerformExamination ? <AddNewExamination user_id={user_id}/> : (isViewAllExaminations ? <ViewAllTherapies user_id={user_id}/> : (isBack ? <App/>: renderForm))}
+        {isPerformExamination ? <AddNewExamination user_id={user_id}/> : (isViewAllExaminations ? <ViewAllExaminations user_id={user_id}/> : (isBack ? <App/>: renderForm))}
       </div>
   );
 }
