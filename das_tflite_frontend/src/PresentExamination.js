@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
-import DoctorMenu from "./DoctorMenu";
 import Form from 'react-bootstrap/Form';
-import axios from 'axios';
+import _ from 'lodash'
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-import Textarea from '@mui/joy/Textarea';
 import PatientMenu from "./PatientMenu";
 
 function PresentExamination(user){
@@ -14,9 +12,11 @@ function PresentExamination(user){
     const disease = user.results.resulting_disease;
     const therapies = user.results.therapies;
     const image = user.image[0];
-    const [selectedId, setSelectedId] = useState(0);
     const [selectedTherapy, setSelectedTherapy] = useState(therapies[0]);
 
+    const onOptionChangeTherapy = e => {
+      setSelectedTherapy(therapies[parseInt(e.target.value) - 1]);
+    };
 
     const renderForm = (
         <div className="login-form" style={{width:"-webkit-fill-available"}}>
@@ -30,6 +30,16 @@ function PresentExamination(user){
               <div className="input-container" style={{flexDirection:"row"}}>
                   <label style={{margin:"left"}}>Disease </label>
                   <label style={{margin:"auto"}}>{disease} </label>
+              </div>
+              <div className="input-container" style={{flexDirection:"row"}}>
+                  <label style={{margin:"auto"}}>Therapy options </label>
+                  <Form.Select aria-label="Default select example" onChange={onOptionChangeTherapy}>
+                    { _.range(0, therapies.length).map(value => <option key={value+1} value={value+1}>{value+1}</option>) }
+                  </Form.Select>
+              </div>
+              <div className="input-container" style={{flexDirection:"row"}}>
+                  <label style={{margin:"left"}}>Therapy id </label>
+                  <label style={{margin:"auto"}}>{selectedTherapy.id} </label>
               </div>
               <div className="input-container" style={{flexDirection:"row"}}>
                   <label style={{margin:"left"}}>Location </label>
