@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import PatientMenu from "./PatientMenu";
+import PresentExamination from "./PresentExamination";
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
@@ -16,6 +17,8 @@ function AddNewExamination(user){
     const [location, setLocation] = useState("Head");
     const [gender, setGender] = useState("Male");
     const [image, setImage] = useState([]);
+    const [presentData, setPresentData] = useState(false);
+    const [data, setExamination] = useState([]);
     const user_id = user.user_id;
 
     function onImageChange(e)
@@ -53,8 +56,8 @@ function AddNewExamination(user){
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setIsLoading(true);
         setIsProcessing(true);
+        setIsLoading(true);
     
         var {label_loe, label_width, label_height, label_age, label_instances_number} = document.forms[0];
         var bodyFormData = new FormData();
@@ -75,21 +78,10 @@ function AddNewExamination(user){
           }
         };
         const response = await axios.post('http://localhost:10000/process_examination', bodyFormData, axiosConfig);
-        const userData = response.data
-        //TODO: FETCH RESULTS AND PRESENT THERAPIES
+        const examinationData = response.data
+        setExamination(examinationData);
         setIsLoading(false);
-        setIsProcessing(false);
-          if (userData) {
-            if (userData.status_flag === true) {
-              createNotification("success");
-            } else {
-              createNotification("error");
-              setErrorMessages({ name: "unable_to_perform_examination", message: errors.unable_to_perform_examination });
-            }
-          } else {
-            createNotification("error");
-            setErrorMessages({ name: "unable_to_perform_examination", message: errors.unable_to_perform_examination });
-          }
+        setPresentData(true);
     };
 
     const renderForm = (
@@ -177,7 +169,7 @@ function AddNewExamination(user){
     return (
         <div>
           {/* {isBack ? <PatientMenu user_id={user_id}/> : (isProcessing ? <ThreeDots/>: renderForm)} */}
-          {isBack ? <PatientMenu user_id={user_id}/> : renderForm}
+          {isBack ? <PatientMenu user_id={user_id}/> : (isLoading ? <ThreeDots/>: (presentData ? <PresentExamination user_id={user_id} results={data} image={image}/> : renderForm))}
         </div>
     );
 }

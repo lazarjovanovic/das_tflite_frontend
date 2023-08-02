@@ -75,11 +75,11 @@ function Login() {
         <form onSubmit={handleSubmit}>
           <div className="input-container">
             <label>Username </label>
-            <Form.Control type="text" name="uname" value="lazalazic" required />
+            <Form.Control type="text" name="uname" value="zikazikic" required />
           </div>
           <div className="input-container">
             <label>Password </label>
-            <Form.Control type="password" name="pass" value="laza123" required />
+            <Form.Control type="password" name="pass" value="zika123" required />
             {renderErrorMessage("invalid_login_label")}
           </div>
           <div className="button-container">
