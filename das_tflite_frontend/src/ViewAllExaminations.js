@@ -9,6 +9,8 @@ import DataTable from 'react-data-table-component';
 import DataTableExtensions from 'react-data-table-component-extensions';
 import Icon from "react-crud-icons";
 import 'react-data-table-component-extensions/dist/index.css';
+import ViewExaminationFromList from "./ViewExaminationFromList";
+import PatientMenu from "./PatientMenu";
 
 function ViewAllExaminations(user){
     const [isLoading, setIsLoading] = useState(true);
@@ -109,7 +111,7 @@ function ViewAllExaminations(user){
 
     return (
       <div className="container" style={{maxWidth:"1520px"}}>
-          {isBack ? <DoctorMenu user_id={user_id}/> : (isView ? <ViewAllExaminations user_id={user_id}/> : (isLoading ? ThreeDots : renderForm))}
+          {isBack ? <PatientMenu user_id={user_id}/> : (isView ? <ViewExaminationFromList user_id={user_id} examination={isViewData}/> : (isLoading ? ThreeDots : renderForm))}
       </div>
     );
 }
