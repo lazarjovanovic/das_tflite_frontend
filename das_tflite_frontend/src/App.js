@@ -3,16 +3,10 @@
 //"type": "module", in package.json
 
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
-import { Navigate } from "react-router-dom";
-import axios from 'axios';
 import Register from "./Register";
 import Login from "./Login";
 import Button from "react-bootstrap/Button";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-import logo from './logo.svg';
-//import './styles/App.css';
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -48,23 +42,23 @@ function App() {
     </div>
   );
 
-  const renderLoginRegisterForm = (
-    <div className="form">
-      <div className="title">Derma App</div>
-      <form>
-        <button
-          type="button"
-          className="btn primary"
-          onClick={handleOnCLickLogIn}
-        >Sign In</button>
-        <button
-          type="button"
-          className="btn primary"
-          onClick={handleOnCLickRegister}
-        >Register</button>
-      </form>
-    </div>
-  )
+  // const renderLoginRegisterForm = (
+  //   <div className="form">
+  //     <div className="title">Derma App</div>
+  //     <form>
+  //       <button
+  //         type="button"
+  //         className="btn primary"
+  //         onClick={handleOnCLickLogIn}
+  //       >Sign In</button>
+  //       <button
+  //         type="button"
+  //         className="btn primary"
+  //         onClick={handleOnCLickRegister}
+  //       >Register</button>
+  //     </form>
+  //   </div>
+  // )
 
   return (
     <div className="app">

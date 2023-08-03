@@ -5,7 +5,6 @@ import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-import { ThreeDots  } from 'react-loader-spinner'
 import Textarea from '@mui/joy/Textarea';
 
 function AddNewTherapy(user){

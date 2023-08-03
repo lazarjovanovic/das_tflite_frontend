@@ -3,7 +3,6 @@
 //"type": "module", in package.json
 
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
 import axios from 'axios';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,8 +11,6 @@ import Button from "react-bootstrap/Button";
 import { ThreeDots  } from 'react-loader-spinner'
 import DoctorMenu from "./DoctorMenu";
 import PatientMenu from "./PatientMenu";
-
-import logo from './logo.svg';
 import './styles/App.css';
 import App from "./App";
 
@@ -49,11 +46,11 @@ function Register() {
 
     const encoded_pwd = btoa(rpassword.value)
 
-    const formattedDate = startDate.toLocaleDateString('en-GB', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    }).split('/').reverse().join('-');
+    // const formattedDate = startDate.toLocaleDateString('en-GB', {
+    //   year: 'numeric',
+    //   month: '2-digit',
+    //   day: '2-digit',
+    // }).split('/').reverse().join('-');
 
     const requestOptions = {
         name: rname.value,

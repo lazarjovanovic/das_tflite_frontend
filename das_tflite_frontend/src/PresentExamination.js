@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from 'react-bootstrap/Form';
 import _ from 'lodash'
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {NotificationContainer} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import PatientMenu from "./PatientMenu";
 
